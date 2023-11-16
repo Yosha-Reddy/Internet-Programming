@@ -1,232 +1,235 @@
-<?php include_once 'helpers/helper.php'; ?><!-- log on to codeastro.com for more projects -->
-<?php subview('header.php'); ?>
-<link rel="stylesheet" href="assets/css/form.css">
-<style>
+<?php 
 
-input {
-    border :0px !important;
-    border-bottom: 2px solid #424242 !important;
-    color :#424242 !important;
-    border-radius: 0px !important;
-    font-weight: bold !important;   
-    margin-bottom: 10px;    
-}
-label {
-    color : #828282 !important;
-    font-size: 19px;
-  }  
-.input-group-addon {
-    background-color: transparent;
-    border-left: 0;
-}
-.card-body {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);  
-}
-@font-face {
-  font-family: 'product sans';
-  src: url('assets/css/Product Sans Bold.ttf');
-  }
-h1 {
-    font-size: 50px !important;
-    margin-bottom: 20px;  
-    font-family :'product sans' !important;
-    font-weight: bolder;
-  }
-.cc-number.identified {
-    background-repeat: no-repeat;
-	background-position-y: 3px;
-	background-position-x: 99%;
+if(session_status() == PHP_SESSION_NONE)
+{
+	session_start();//start session if session not start
 }
 
-.one-card > div {
-    height: 150px;
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-
-.two-card > div {
-    height: 80px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    width: 48%;
-}
-
-.two-card div.amex-cvc-preview {
-    float: right;
-}
-
-body {
-  background: #bdc3c7;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #2c3e50, #bdc3c7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-}
-
-textarea:focus, 
-textarea.form-control:focus, 
-input.form-control:focus, 
-input[type=text]:focus, 
-input[type=password]:focus, 
-input[type=email]:focus, 
-input[type=number]:focus, 
-[type=text].form-control:focus, 
-[type=password].form-control:focus, 
-[type=email].form-control:focus, 
-[type=tel].form-control:focus, 
-[contenteditable].form-control:focus {
-  box-shadow: inset 0 -1px 0 #ddd;
-}
-</style>
-<?php if(isset($_SESSION['userId'])) {   ?> 
-<main>
-<?php
-  if(isset($_GET['error'])) {
-    if($_GET['error'] === 'sqlerror') {
-        echo"<script>alert('Database error')</script>";
-    } else if($_GET['error'] === 'noret') {
-      echo"<script>alert('No return flight available')</script>";
-    } else if($_GET['error'] === 'mailerr') {
-      echo"<script>alert('Mail error')</script>";
-    }
-  }
+if(isset($_SESSION['tracker'])){
 ?>
-	<div class="container-fluid py-3">
-    <div class="row">
-        <div class="col-12 col-sm-8 col-md-6 col-lg-4 mx-auto">
-          <h1 class="text-center text-light">PAY INVOICE</h1>
-            <div id="pay-invoice" class="card">
-                <div class="card-body">
-            <label for="fname">Accepted Cards</label>
-            <div class="icon-container">
-              <i class="fa fa-cc-visa fa-3x" style="color:navy;"></i>
-              <i class="fa fa-cc-amex fa-3x" style="color:blue;"></i>
-              <i class="fa fa-cc-mastercard fa-3x" style="color:red;"></i>
-              <i class="fa fa-cc-discover fa-3x" style="color:orange;"></i>
-               <i class="fa fa-cc-stripe fa-3x" style="color:blue;"></i>
-            </div>
-            <hr><!-- log on to codeastro.com for more projects -->
-            <form action="includes/payment.inc.php" method="post" 
-                novalidate="novalidate" class="needs-validation">
-  
-                <div class="form-group">
-                    <label for="cc-number" class="control-label mb-1">Card number</label>
-                    <input id="cc-number" name="cc-number" type="tel" class="form-control cc-number identified visa" required autocomplete="off"  >
-                    <span class="invalid-feedback">Enter a valid 12 to 16 digit card number</span>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="cc-exp" class="control-label mb-1">Expiration</label>
-                            <input id="cc-exp" name="cc-exp" type="tel" class="form-control cc-exp" required placeholder="MM / YY" autocomplete="cc-exp">
-                            <span class="invalid-feedback">Enter the expiration date</span>
-                        </div>
-                    </div>
-                    <div class="col-6 p-0">
-                        <label for="x_card_code" class="control-label mb-1">CVV</label>
-                        <div class="row">
-                            <div class="col pr-0">
-                                <input id="x_card_code" name="x_card_code" type="password" class="form-control cc-cvc" required autocomplete="off">
-                            </div><!-- log on to codeastro.com for more projects -->
-                            <div class="col pr-0">                            
-                                <span class="invalid-feedback order-last">Enter the 3-digit code on back</span>
-                                <div class="input-group-append"><!-- log on to codeastro.com for more projects -->
-                                    <div class="input-group-text">
-                                    <span class="fa fa-question-circle fa-lg" data-toggle="popover" data-container="body" data-html="true" data-title="CVV" 
-                                    data-content="<div class='text-center one-card'>The 3 digit code on back of the card..<div class='visa-mc-cvc-preview'></div></div>"
-                                    data-trigger="hover"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <br/>
 
-                <div class='form-row'><!-- log on to codeastro.com for more projects -->
-                <div class='col-md-12 mb-2'>
-                    <button id="payment-button" type="submit"  name="pay_but"
-                    class="btn btn-lg btn-primary btn-block">
-                        <i class="fa fa-lock fa-lg"></i>&nbsp;
-                        <span id="payment-button-amount">Pay </span>
-                        <span id="payment-button-sending" style="display:none;">Sending…</span>
-                    </button>
-                </div>
-            </form>
-                </div>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html lang="">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>TICKET2RESERVE</title>
+
+		<!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-theme.min.css">
+
+	</head>
+<body style="background-color: lightblue;">
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">TICKET2RESERVE Online Ticketing</a>
     </div>
+    <ul class="nav navbar-nav">
+      <li class="active">
+      	<a href="#">Rerservation
+      	<span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+      	</a>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="index.php"><span class="glyphicon glyphicon-backward"></span> Back To Home</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="container-fluid">
+	<div class="col-md-1"></div>
+	<div class="col-md-10">
+		<div class="panel panel-danger">
+			<div class="panel-heading">
+				<h3 class="panel-title">STEPS FOR BOOKING</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">1. SCHEDULE
+								</h3>
+							</div>
+							<div class="panel-body">
+								SCHEDULE OF TRAVEL
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<h3 class="panel-title">2. ACCOMODATION
+								</h3>
+							</div>
+							<div class="panel-body">
+								ACCOMODATION TYPE
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-success">
+							<div class="panel-heading">
+								<h3 class="panel-title">3. PASSENGER INFO
+								</h3>
+							</div>
+							<div class="panel-body">
+								PASSENGER DETAILS
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="panel panel-warning">
+							<div class="panel-heading">
+								<h3 class="panel-title">4. PAYMENT INFO
+									<span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
+								</h3>
+							</div>
+							<div class="panel-body">
+								TOTAL PAYMENT
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-1"></div>
 </div>
-</main>
-<?php subview('footer.php'); ?> 
-<script>
-$(document).ready(function(){
-  $('.input-group input').focus(function(){
-    me = $(this) ;
-    $("label[for='"+me.attr('id')+"']").addClass("animate-label");
-  }) ;
-  $('.input-group input').blur(function(){
-    me = $(this) ;
-    if ( me.val() == ""){
-      $("label[for='"+me.attr('id')+"']").removeClass("animate-label");
-    }
-  }) ;
-});
 
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
+<div class="container-fluid">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-body">
+			 <h2>
+			 	<center>PAYMENT INFO</center>
+			 </h2>
+			 <br />
+			 <div class="panel panel-success">
+			 	<div class="panel-heading">
+			 		<h3 class="panel-title"><center>DEPARTURE</center></h3>
+			 	</div>
+			 	<div class="panel-body">
+			 		<strong>
+			 			<i>Medallion Transport, M/V Lady of All Nations</i>
+			 			<h3>
+			 			<?php require_once('data/depart_from_to.php'); 
+			 				echo $origin['origin_desc'];
+			 			?>
+			 			 - 
+			 			 <?= $dest['dest_destination']; ?>
+			 			 </h3>
+			 			<p>Departure Date: <?= $_SESSION['departure_date']; ?> @9:00AM</p>
+			 		</strong>
+			 			<i>Estimated Arrival Time: The Next Day @3:00PM</i><br />
+			 			<strong>
+			 				<?php require_once('data/get_accomodation.php'); 
+			 					echo $accomodation['acc_type'];
+			 				?>
+			 			</strong>
+			 	</div>
+			 </div>
+
+			 <div class="panel panel-success">
+			 	<div class="panel-heading">
+			 		<h3 class="panel-title">CONTACT INFO</h3>
+			 	</div>
+			 	<div class="panel-body">
+			 	<?php require_once('data/getBooked.php'); ?>
+			 	<strong>Book By:</strong> <?= ucwords($bookByInfo['book_by']);  ?><br /> 
+			 	<strong>Contact #:</strong> <?= $bookByInfo['book_contact']; ?><br />
+			 	<strong>Address:</strong> <?= $bookByInfo['book_address']; ?><br />
+			 	</div>
+			 </div>
+				<div class="container-fluid">
+				<strong>
+				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+				PASSENGERS</strong>
+					<table id="myTable-party" class="table table-bordered table-hover" cellspacing="0" width="100%">
+							<thead>
+							    <tr>
+							        <th>
+							        	<center>
+							       			Name
+							        	</center> 
+							        </th>
+							        <th>
+							        	<center>
+							        		Age
+							        	</center>
+						        	</th>
+							        <th>
+							        	<center>
+							        		Gender
+							        	</center>
+						        	</th>
+						        	 <th>
+							        	<center>
+							        		Departure Price
+							        	</center>
+						        	</th>
+							    </tr>
+							</thead>
+						    <tbody>
+						    <?php
+						    	require_once('data/getBooked.php');
+						    	$totalPayment = 0;
+						    	$tracker = '';
+						     foreach($bookPass as $bp): 
+						    	$name = $bp['book_name'];
+						    	$name = ucwords($name);
+						    	$price = $bp['acc_price'];
+						    	$totalPayment += $price;
+						    	$tracker = $bp['book_tracker'];
+						    ?>
+						    	<tr align="center">
+						    		<td><?= $name; ?></td>
+						    		<td><?= $bp['book_age']; ?></td>
+						    		<td><?= $bp['book_gender']; ?></td>
+						    		<td><?= $price; ?></td>
+						    	</tr>
+						    <?php endforeach; ?>
+						    	<tr>
+						    		<td></td>
+						    		<td></td>
+						    		<td align="right"><strong>TOTAL:</strong></td>
+						    		<td align="center"><strong><?= $totalPayment; ?></strong></td>
+						    	</tr>
+						    </tbody>
+						    <strong>- Booked ID: <?= $tracker; ?></strong>
+						   </table>
+						   <center>
+							   <a href="index.php" class="btn btn-success">Return Home
+								   <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+							   </a>
+						   </center>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+
+<script type="text/javascript" src="assets/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 
 
 
-$("#payment-button").click(function(e) {
- 
-    var form = $(this).parents('form');
-    
-    var cvv = $('#x_card_code').val();
-    var regCVV = /^[0-9]{3,4}$/;
-    var CardNo = $('#cc-number').val();
-    var regCardNo = /^[0-9]{12,16}$/;
-    var date = $('#cc-exp').val().split('/');
-    var regMonth = /^01|02|03|04|05|06|07|08|09|10|11|12$/;
-    var regYear = /^20|21|22|23|24|25|26|27|28|29|30|31$/;
-    
-    if (form[0].checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    else {
-       if (!regCardNo.test(CardNo)) {
-       
-        $("#cc-number").addClass('required');
-        $("#cc-number").focus();
-        alert(" Enter a valid 10 to 16 card number");
-        return false;
-      }
-      else if (!regCVV.test(cvv)) {
-       
-        $("#x_card_code").addClass('required');
-        $("#x_card_code").focus();
-        alert(" Enter a valid CVV");
-        return false;
-      }
-      else if (!regMonth.test(date[0]) && !regMonth.test(date[1]) ) {
-       
-        $("#cc_exp").addClass('required');
-        $("#cc_exp").focus();
-        alert(" Enter a valid exp date");
-        return false;
-      }
-      
-      
-      
-      form.submit();
-    }
-    
-    form.addClass('was-validated');
-});
-</script>
-</main>
-<?php } ?>
+</body>
+</html>
+
+<?php
+}else{
+	echo '<strong>';
+	echo 'Page Not Exist';
+	echo '</strong>';
+}//end if else isset
+
+ ?>
