@@ -1,543 +1,270 @@
-﻿<!DOCTYPE html>
+<?php
+session_start();
+error_reporting(0);
+include('includes/config.php');
+if(isset($_GET['action']) && $_GET['action']=="add"){
+	$id=intval($_GET['id']);
+	if(isset($_SESSION['cart'][$id])){
+		$_SESSION['cart'][$id]['quantity']++;
+	}else{
+		$sql_p="SELECT * FROM products WHERE id={$id}";
+		$query_p=mysqli_query($con,$sql_p);
+		if(mysqli_num_rows($query_p)!=0){
+			$row_p=mysqli_fetch_array($query_p);
+			$_SESSION['cart'][$row_p['id']]=array("quantity" => 1, "price" => $row_p['productPrice']);
+			header('location:index.php');
+		}else{
+			$message="Product ID is invalid";
+		}
+	}
+}
 
 
+?>
+
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-	
-<meta charset="utf-8">
-	
-<meta name="viewport" content="width=devidev-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TICKET2RESERVE</title>
-	
-	
-<!-- [ FONT-AWESOME ICON ] 
-        
-=========================================================================================================================-->
-	
-<link rel="stylesheet" type="text/css" href="library/font-awesome-4.3.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<title>Tutsy Delights Bakery</title>
+<!--Bootstrap -->
+<link rel="stylesheet" href="assets2/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="assets2/css/style.css" type="text/css">
+<link rel="stylesheet" href="assets2/css/owl.carousel.css" type="text/css">
+<link rel="stylesheet" href="assets2/css/owl.transitions.css" type="text/css">
+<link href="assets2/css/slick.css" rel="stylesheet">
+<link href="assets2/css/bootstrap-slider.min.css" rel="stylesheet">
+<link href="assets2/css/font-awesome.min.css" rel="stylesheet">
 
-	
-<!-- [ PLUGIN STYLESHEET ]
-        
-=========================================================================================================================-->
-	
-<link rel="shortcut icon" type="image/x-icon" href="images/icon.png">
-	
-<link rel="stylesheet" type="text/css" href="css/animate.css">
-	
-<link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
-        
-<link rel="stylesheet" type="text/css" href="css/owl.theme.css">
-	
-<link rel="stylesheet" type="text/css" href="css/magnific-popup.css">
-	
-<!-- [ Boot STYLESHEET ]
-        
-=========================================================================================================================-->
-	
-<link rel="stylesheet" type="text/css" href="library/bootstrap/css/bootstrap-theme.min.css">
-	
-<link rel="stylesheet" type="text/css" href="library/bootstrap/css/bootstrap.css">
-       
-<!-- [ DEFAULT STYLESHEET ] 
-        
-=========================================================================================================================-->
-	
-<link rel="stylesheet" type="text/css" href="css/style.css">
-        
-<link rel="stylesheet" type="text/css" href="css/responsive.css">
-	
-<link rel="stylesheet" type="text/css" href="css/color/rose.css">
-        
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets2/images/favicon-icon/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets2/images/favicon-icon/apple-touch-icon-114-precomposed.html">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets2/images/favicon-icon/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="assets2/images/favicon-icon/apple-touch-icon-57-precomposed.png">
+<link rel="shortcut icon" href="assets2/images/favicon-icon/favicon.png">
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+<!-- CSS -->
+<link href="style.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+<link href='files/dist/themes/fontawesome-stars.css' rel='stylesheet' type='text/css'>
+   <!-- Bootstrap Core CSS -->
+	    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
+	    <!-- Customizable CSS -->
+	    <link rel="stylesheet" href="assets/css/main.css">
+	    <link rel="stylesheet" href="assets/css/green.css">
+	    <link rel="stylesheet" href="assets/css/owl.carousel.css">
+		<link rel="stylesheet" href="assets/css/owl.transitions.css">
+		<!--<link rel="stylesheet" href="assets/css/owl.theme.css">-->
+		<link href="assets/css/lightbox.css" rel="stylesheet">
+		<link rel="stylesheet" href="assets/css/animate.min.css">
+		<link rel="stylesheet" href="assets/css/rateit.css">
+		<link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
+
+		<!-- Demo Purpose Only. Should be removed in production -->
+		<link rel="stylesheet" href="assets/css/config.css">
+
+		<link href="assets/css/green.css" rel="alternate stylesheet" title="Green color">
+		<link href="assets/css/blue.css" rel="alternate stylesheet" title="Blue color">
+		<link href="assets/css/red.css" rel="alternate stylesheet" title="Red color">
+		<link href="assets/css/orange.css" rel="alternate stylesheet" title="Orange color">
+		<link href="assets/css/dark-green.css" rel="alternate stylesheet" title="Darkgreen color">
+		<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+		<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
+
+<!-- Script -->
+<script src="jquery-3.0.0.js" type="text/javascript"></script>
+<script src="files/dist/jquery.barrating.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function() {
+    $('.rating').barrating({
+        theme: 'fontawesome-stars',
+        onSelect: function(value, text, event) {
+
+            // Get element id by data-id attribute
+            var el = this;
+            var el_id = el.$elem.data('id');
+
+            // rating was selected by a user
+            if (typeof(event) !== 'undefined') {
+
+                var split_id = el_id.split("_");
+
+                var postid = split_id[1];  // postid
+
+                // AJAX Request
+                $.ajax({
+                    url: 'rating_ajax.php',
+                    type: 'post',
+                    data: {postid:postid,rating:value},
+                    dataType: 'json',
+                    success: function(data){
+                        // Update average
+                        var average = data['averageRating'];
+                        $('#avgrating_'+postid).text(average);
+                    }
+                });
+            }
+        }
+    });
+});
+
+</script>
 </head>
-<body >
-
-<!-- [ LOADERs ]
-
-================================================================================================================================-->
-	
-    <div class="preloader">
-    
-<div class="loader theme_background_color">
-        
-<span></span>
-      
-    
-</div>
-</div>
-<!-- [ /PRELOADER ]
-
-=============================================================================================================================-->
-
-<!-- [WRAPPER ]
-
-=============================================================================================================================-->
-
-<div class="wrapper">
-  
-<!-- [NAV]
- 
-============================================================================================================================-->    
-   
-<!-- Navigation
-    ==========================================-->
-    
-<nav  class=" nim-menu navbar navbar-default navbar-fixed-top">
-      
-<div class="container">
-        
-<!-- Brand and toggle get grouped for better mobile display -->
-        
-<div class="navbar-header">
-          
-<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            
-<span class="sr-only">Toggle navigation</span>
-            
-<span class="icon-bar"></span>
-            
-<span class="icon-bar"></span>
-            
-<span class="icon-bar"></span>
-          
-</button>
-            
-<a class="navbar-brand" href="index.html">TICKET<span class="themecolor">2</span>RESERVE</a>
-        
-</div>
-
-        
-<!-- Collect the nav links, forms, and other content for toggling -->
-        
-<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          
-<ul class="nav navbar-nav navbar-right">
-            
-<li><a href="#home" class="page-scroll"><h3>Home</h3></a></li>
-            
-<li><a href="#two" class="page-scroll"><h3>About</h3></a></li>
-                                   
-<li><a href="#one" class="page-scroll"><h3>Inspiration</h3></a></li>
-                                 
-
-            
-<li><a href="#four" class="page-scroll"><h3>Contact</h3></a></li>
-
-<li><a href="admin/" class="page-scroll"><h3>Login</h3></a></li>
-          
-</ul>
-        
-</div>
-<!-- /.navbar-collapse -->
-      
-</div><!-- /.container-fluid -->
-    
-</nav>
+<body>
 
 
-   
-<!-- [/NAV]
- 
-============================================================================================================================--> 
-    
-   
-<!-- [/MAIN-HEADING]
- 
-============================================================================================================================--> 
-   
-<section class="main-heading" id="home">
-       
-<div class="overlay">
-           
-<div class="container">
-               
-<div class="row">
-                   
-<div class="main-heading-content col-md-12 col-sm-12 text-center">
-        
-<h1 class="main-heading-title"><span class="main-element themecolor" data-elements=" TICKET2RESERVE Online, TICKET2RESERVE Online, TICKET2RESERVE Online"></span></h1>
- 
-<h1 class="main-heading-title"><span class="main-element themecolor" data-elements=" Ticket Reservation, Ticket Reservation, Ticket Reservation"></span></h1>
-       
-<p class="main-heading-text">Effortless Travel Planning: Simplifying Your Journey with our Online Train Ticketing System</p>
-        
-<div class="btn-bar">
-          
-<a href="reserved.php" class="btn btn-custom theme_background_color">Reserved Now</a>
-                 
-</div>
-      
-</div>
-               
-</div>
-           
-</div>
-       
-</div>  
-      
-   
-</section>
- 
-<section class="main-heading" id="home">
-       
-<div class="overlay">
-           
-<div class="container">
-               
-<div class="row">
-                   
-<div class="main-heading-content col-md-12 col-sm-12 text-center">
-        
-<h1 class="main-heading-title">We are Creative</h1>
-        
-<p class="main-heading-text"> Allow passengers to view and select their seats virtually, giving them a more personalized travel experience</p>
-        
-<div class="btn-bar">
-          
-<a href="#" class="btn btn-custom theme_background_color">Ge Started</a>
-          
-<a href="#" class="btn btn-custom-outline">Contact Us</a>
-        
-</div>
-      
-</div>
-               
-</div>
-           
-</div>
-       
-</div>  
-      
-   
-</section>
-    
- 
-<!-- [/MAIN-HEADING]
- 
-============================================================================================================================-->
- 
- 
- 
-<!-- [ABOUT US]
- 
-============================================================================================================================-->
- 
-<section class="aboutus white-background black" id="one">
-     
-<div class="container">
-         
-<div class="row">
-             
-<div class="col-md-12 text-center black">
-                 
-<h3 class="title">ABOUT <span class="themecolor">US</span></h3>
-            
-<p class="a-slog">An online train reservation system streamlines the booking process, offering travelers the convenience of reserving seats, checking schedules, and receiving e-tickets, all from the comfort of their devices. This digital platform also provides real-time updates, ensuring a hassle-free and efficient travel experience</p> 
-             
-</div>
-         
-</div>
-         
-<div class="gap">
-             
-         
-</div>
-         
-         
-<div class="row about-box">
-          
-<div class="col-sm-4 text-center">
-            
-<div class="margin-bottom">
-              
-<i class="fa fa-newspaper-o"></i>
-              
-<h4>POWER OF FLEXIBILITY</h4>
-              
-<p class="black">The power of flexibility in an online ticket reservation system empowers travelers to modify their travel plans, change seats, and even cancel bookings, offering the convenience and adaptability needed for today's dynamic schedules and preferences.</p>
-            
-</div> <!-- / margin -->
-          
-</div> <!-- /col -->
-          
-<div class="col-sm-4 about-line text-center">
-            
-<div class="margin-bottom">
-              
-<i class="fa fa-diamond"></i>
-              
-<h4>FULLY RESPONSIVE</h4>
-              
-<p class="black">Ensures seamless functionality and optimal user experience across various devices and screen sizes, allowing travelers to access and utilize the platform from smartphones, tablets, and desktop computers</p>
-            
-</div> <!-- / margin -->
-          
-</div><!-- /col -->
-          
-<div class="col-sm-4 text-center">
-            
-<div class="margin-bottom">
-              
-<i class="fa fa-area-chart"></i>
-              
-<h4>GREAT WEB IDEAS</h4>
-              
-<p class="black">Implement interactive seat maps that allow users to view available seats, select their preferences, and see real-time seat availability.</p>
-            
-</div> <!-- / margin -->
-          
-</div><!-- /col -->
-        
-</div> <!-- /row -->
-         
-         
-         
-         
-     
-</div>
- </section>
- 
- 
- 
-<!-- [/ABOUTUS]
- 
- 
-============================================================================================================================-->
- 
- 
- 
- 
- 
-<!-- [INSPIRATION]
- 
-============================================================================================================================-->
- 
-<section class="inspiration" id="four">
-     
-<div class="overlay">
-         
-<div class="container">
-             
-<div class="row">
-                
- <article class="col-md-12 text-center">
-           
- <div class="intermediate-container">
-             
- <div class="subheading">
-                 
- <h4>Are You Ready To <span class="themecolor">Enjoy?</span></h4>
-           
-   </div>
-             
- <div class="heading">
-              
-  <h2>inspire your customer here!</h2>
-          
-    </div>
-              
-<div class="">
-              
-  <a class="btn btn-custom-outline" href="#"><span>get started</span></a>
-        
+<header class="header-style-1">
+<?php include('includes/top-header.php');?>
+<?php include('includes/main-header.php');?>
+<?php include('includes/menu-bar.php');?>
+</header>
+
+<!-- Banners -->
+<section id="banner" class="banner-section">
+  <div class="container">
+    <div class="div_zindex">
+      <div class="row">
+        <div class="col-md-5 col-md-push-7">
+          <div class="banner_content">
+            <h1>Ever Tasty Ever Delicious.</h1>
+            <p>We have more than twenty cake flavours for you to choose. </p>
+            <a href="cake-listing.php" class="btn">Order Now <span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a> </div>
+        </div>
       </div>
-        
     </div>
-       
-   </article>
-       
+  </div>
+</section>
+<!-- /Banners -->
+
+
+<!-- Resent Cat-->
+<section class="section-padding gray-bg">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2>What we have in wait <span> For You</span></h2>
+
+    <div class="row">
+
+
+      <!-- Recently Listed New Cakes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="resentnewCake">
+
+<?php
+$ret=mysqli_query($con,"select * from products ORDER BY id DESC");
+while ($row=mysqli_fetch_array($ret))
+{
+	# code...
+
+
+?>
+
+<div class="col-list-3">
+<div class="recent-Cake-list">
+<div class="car-info-box"> <a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><img  src="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" data-echo="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>"  class="img-responsive" alt="image"></a>
+
+</div>
+<div class="Cake-title-m" style="color:black;">
+<h4><a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['productName']);?></a></h4>
+
+<span class="price">Ksh <?php echo htmlentities($row['productPrice']);?> <s>  Ksh <?php echo htmlentities($row['productPriceBeforeDiscount']);?></s></span>
+
+
+</div>
+<div class="inventory_info_m">
+<iframe name="Framename" src="rating/index.php" width="100" height="120" frameborder="0" scrolling="no" style="width:100%;"> </iframe>
+ <div class="action"><a href="index.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="lnk btn btn-primary">Add to Cart</a></div>
+</div>
+</div>
+</div>
+<?php }?>
+
       </div>
-    
     </div>
-    
- </div>
- 
+  </div>
 </section>
- 
- 
-<!-- [/INSPIRATION]
- 
+<!-- /Resent Cat -->
 
-============================================================================================================================-->
- 
- 
-<!-- [/SERVICES]
- 
-============================================================================================================================-->
- 
- 
- 
 
- 
-<!-- [/SERVICES]
- 
-============================================================================================================================-->
- 
- 
- 
-<!-- [CONTACT]
- 
-============================================================================================================================-->
- 
-<!--sub-form-->
-<section class="sub-form text-center" id="eight">
-  
-<div class="container">
-    <div class="col-md-12">
-        
-<h3 class="title">Subscribe to our <span class="themecolor"> News letter</span></h3>
-            
-<p class="lead">Lorem ipsum dolor sit amet ne onsectetuer adipiscing elit. Aenean commodo ligula eget dolor in tashin ty</p>
-    
-</div> 
-    
-<div class="row">
-        
-<div class="col-md-3 col-sm-3"></div>
-      
-<div class="col-md-6 center-block col-sm-6 ">
-        
-<form id="mc-form">
-          
-<div class="input-group">
-            
-<input type="email" class="form-control" placeholder="Email Address" required id="mc-email">
-           
-<span class="input-group-btn">
-            
-<button type="submit" class="btn btn-default">SUBSCRIBE <i class="fa fa-envelope"></i> </button>
-            
-</span> </div>
-          
-<label for="mc-email" id="mc-notification"></label>
-       
- </form>
-      
-</div>
-   
- </div>
-  
-</div>
+<?php
+include('includes/config2.php'); ?>
+<!--Testimonial -->
+<section class="section-padding testimonial-section parallex-bg">
+  <div class="container div_zindex">
+    <div class="section-header white-text text-center">
+      <h2>Our Satisfied <span>Customers</span></h2>
+    </div>
+    <div class="row">
+      <div id="testimonial-slider">
 
+<?php
+
+$tid=1;
+$sql = "SELECT pato_testimonial.Testimonial,pato_users.FullName from pato_testimonial join pato_users on pato_testimonial.UserEmail=pato_users.EmailId where pato_testimonial.status=:tid";
+$query = $dbh -> prepare($sql);
+$query->bindParam(':tid',$tid, PDO::PARAM_STR);
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$cnt=1;
+if($query->rowCount() > 0)
+{
+foreach($results as $result)
+{  ?>
+
+
+        <div class="testimonial-m">
+
+          <div class="testimonial-content">
+            <div class="testimonial-heading">
+              <h5><?php echo htmlentities($result->FullName);?></h5>
+            <p><?php echo htmlentities($result->Testimonial);?></p>
+          <!--   <iframe name="Framename" src="rating/index.php" width="100" height="120" frameborder="0" scrolling="no" style="width:100%;"> </iframe> -->
+
+          </div>
+
+        </div>
+        </div>
+
+        <?php }} ?>
+
+
+
+      </div>
+    </div>
+  </div>
+  <!-- Dark Overlay-->
+  <div class="dark-overlay"></div>
+  <?php include('includes/footer.php');?>
 </section>
+<!-- /Testimonial-->
 
-<!--sub-form end--> 
 
+<!--Footer -->
 
- 
- 
-<!-- [/CONTACT]
- 
-============================================================================================================================-->
- 
- 
- 
-<!-- [FOOTER]
- 
-============================================================================================================================-->
- 
+<!-- /Footer-->
 
-<footer class="site-footer section-spacing text-center " id="eight">
-    
-  
-<div class="container">
-    
-<div class="row">
-      
-<div class="col-md-4">
-        
-<p class="footer-links"><a href="#">Terms of Use</a> <a href="#">Privacy Policy</a></p>
-      
-</div>
-      
-<div class="col-md-4"> <small>&copy; 2021 Nim. All rights reserved.</small></div>
-      
-<div class="col-md-4"> 
-        
-<!--social-->
-        
-        
-<ul class="social">
-          
-<li><a href="https://twitter.com/" target="_blank"><i class="fa fa-twitter "></i></a></li>
-          
-<li><a href="https://www.facebook.com/" target="_blank"><i class="fa fa-facebook"></i></a></li>
-          
-<li><a href="https://www.youtube.com/" target="_blank"><i class="fa fa-youtube-play"></i></a></li>
-        
-</ul>
-        
-        
-<!--social end--> 
-        
-      
-</div>
-    
-</div>
-  
-</div>
+<!--Back to top-->
+<div id="back-top" class="back-top"> <a href="#top"><i class="fa fa-angle-up" aria-hidden="true"></i> </a> </div>
+<!--/Back to top-->
 
-</footer>
+<!--Login-Form -->
 
- 
- 
- 
-<!-- [/FOOTER]
- 
-============================================================================================================================-->
- 
- 
- 
+<!--/Forgot-password-Form -->
 
-</div>
- 
+<!-- Scripts -->
+<script src="assets2/js/jquery.min.js"></script>
+<script src="assets2/js/bootstrap.min.js"></script>
+<script src="assets2/js/interface.js"></script>
+<!--bootstrap-slider-JS-->
+<script src="assets2/js/bootstrap-slider.min.js"></script>
+<!--Slider-JS-->
+<script src="assets2/js/slick.min.js"></script>
+<script src="assets2/js/owl.carousel.min.js"></script>
 
-<!-- [ /WRAPPER ]
-
-=============================================================================================================================-->
-
-	
-<!-- [ DEFAULT SCRIPT ] -->
-	
-<script src="library/modernizr.custom.97074.js"></script>
-	
-<script src="library/jquery-1.11.3.min.js"></script>
-        
-<script src="library/bootstrap/js/bootstrap.js"></script>
-	
-<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>	
-	
-<!-- [ PLUGIN SCRIPT ] -->
-        
-<script src="library/vegas/vegas.min.js"></script>
-	
-<script src="js/plugins.js"></script>
-        
-<!-- [ TYPING SCRIPT ] -->
-         
-<script src="js/typed.js"></script>
-         
-<!-- [ COUNT SCRIPT ] -->
-         
-<script src="js/fappear.js"></script>
-       
-<script src="js/jquery.countTo.js"></script>
-	
-<!-- [ SLIDER SCRIPT ] -->  
-        
-<script src="js/owl.carousel.js"></script>
-         
-<script src="js/jquery.magnific-popup.min.js" type="text/javascript"></script>
-        
-<script type="text/javascript" src="js/SmoothScroll.js"></script>
-        
-        
-<!-- [ COMMON SCRIPT ] -->
-	<script src="js/common.js"></script>
-  
 </body>
-
 
 </html>
